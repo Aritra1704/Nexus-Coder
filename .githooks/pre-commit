@@ -1,0 +1,1 @@
+#!/bin/sh\n\n# LocalClaw Git-Guardian Hook\n# Verifies changes for production safety\n\necho "Running Git-Guardian pre-commit checks..."\n\n# Example: run a test suite or linting\n# npm test\n\nif [ $? -ne 0 ]; then\n  echo "Pre-commit checks failed. Commit aborted."\n  exit 1\nfi\n
