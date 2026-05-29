@@ -5,14 +5,14 @@ import { z } from 'zod';
 // For local testing, allow missing env vars if not production
 loadEnv();
 
-const defaultWorkspacePath = '/Users/aritrarpal/Documents/workspace_biz/Arnold/workspace';
+const defaultWorkspacePath = '/Users/aritrarpal/Documents/workspace_biz/surgical-orchestrator/workspace';
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   
   // Database Configuration (optional for early foundation tests)
-  DATABASE_URL: z.string().optional().default('postgres://user:password@localhost:5432/arnold'),
-  DATABASE_SCHEMA: z.string().regex(/^[a-z_][a-z0-9_]*$/).default('arnold'),
+  DATABASE_URL: z.string().optional().default('postgres://user:password@localhost:5432/surgical-orchestrator'),
+  DATABASE_SCHEMA: z.string().regex(/^[a-z_][a-z0-9_]*$/).default('surgical_orchestrator'),
   
   // Model Configuration (Multi-model pipeline)
   GEMINI_API_KEY: z.string().optional(),
@@ -21,6 +21,15 @@ const envSchema = z.object({
   MODEL_CODER: z.string().default('qwen2.5-coder:7b'),
   MODEL_ROUTER: z.string().default('llama3.2:3b'),
   MODEL_VERIFIER: z.string().default('qwen2.5-coder:7b'),
+
+  // Telegram Collaboration
+  TELEGRAM_BOT_TOKEN: z.string().optional(),
+  TELEGRAM_CHAT_ID: z.string().optional(),
+
+  // Control API
+  CONTROL_API_TOKEN: z.string().optional(),
+  CONTROL_API_PORT: z.coerce.number().int().positive().default(3000),
+  CONTROL_API_HOST: z.string().default('127.0.0.1'),
 
   // Agent Logic
   AUTO_RESUME_ENABLED: z.enum(['true', 'false']).default('true').transform((val) => val === 'true'),
@@ -33,7 +42,7 @@ const envSchema = z.object({
 const parsedEnv = envSchema.safeParse(process.env);
 
 if (!parsedEnv.success) {
-  throw new Error(`Invalid Arnold configuration: ${JSON.stringify(parsedEnv.error.issues, null, 2)}`);
+  throw new Error(`Invalid surgical-orchestrator configuration: ${JSON.stringify(parsedEnv.error.issues, null, 2)}`);
 }
 
 const env = parsedEnv.data;
@@ -51,6 +60,12 @@ export const config = {
   modelCoder: env.MODEL_CODER,
   modelRouter: env.MODEL_ROUTER,
   modelVerifier: env.MODEL_VERIFIER,
+
+  telegramBotToken: env.TELEGRAM_BOT_TOKEN,
+  telegramChatId: env.TELEGRAM_CHAT_ID,
+  controlApiToken: env.CONTROL_API_TOKEN,
+  controlApiPort: env.CONTROL_API_PORT,
+  controlApiHost: env.CONTROL_API_HOST,
   
   workspaceRoot: defaultWorkspacePath,
   
