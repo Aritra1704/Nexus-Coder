@@ -1,10 +1,10 @@
 # Module Design: Workspace-Aware Sandbox (`src/infrastructure/sandbox/`)
 
 ## 1. Purpose
-The `Sandbox` module provides a secure execution environment for terminal commands. It addresses the user's mandatory requirement: **Arnold must work directly inside repositories under `workspace_biz`**.
+The `Sandbox` module provides a secure execution environment for terminal commands. It addresses the user's mandatory requirement: **surgical-orchestrator must work directly inside repositories under `workspace_biz`**.
 
 ## 2. Key Architectural Decisions
-- **Mount-Point Logic:** When using Docker, the `workspace_biz` root (or specific project directory) is mounted as a volume. This ensures Arnold's work is persistent and directly visible in the local filesystem.
+- **Mount-Point Logic:** When using Docker, the `workspace_biz` root (or specific project directory) is mounted as a volume. This ensures surgical-orchestrator's work is persistent and directly visible in the local filesystem.
 - **Resource Constraints:** Enforces CPU/Memory limits to ensure the host system remains responsive during heavy tasks (like builds or tests).
 - **Dual-Mode Execution:**
   - **Docker Mode:** Isolated, resource-limited execution for untrusted/high-risk commands.

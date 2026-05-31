@@ -11,7 +11,7 @@ export async function runTerminalCommand({ command, workspaceRoot, timeoutMs = 1
     throw new Error('CRITICAL ERROR: Command hit OS Safeguard blocklist.');
   }
 
-  // 2. Arnold Logic: Always ensure execution happens in the user's workspace_biz repos
+  // 2. surgical-orchestrator Logic: Always ensure execution happens in the user's workspace_biz repos
   // We use the absolute path to workspaceRoot to ensure in-place editing.
   
   if (config.dockerSandboxEnabled) {

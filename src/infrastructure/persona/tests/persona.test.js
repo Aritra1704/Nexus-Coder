@@ -6,7 +6,7 @@ async function testPersona() {
   const result = { toolRuns: [{ summary: 'Created table' }] };
   
   const narrative = buildNarrative(task, result, 'done');
-  assert.ok(narrative.includes('I am Arnold'), 'Missing persona intro');
+  assert.ok(narrative.includes('I am surgical-orchestrator'), 'Missing persona intro');
   assert.ok(narrative.includes('completed successfully'), 'Incorrect status summary');
   assert.ok(narrative.includes('Created table'), 'Missing tool highlights');
   

@@ -1,11 +1,14 @@
-import { runTool } from '../tools/registry.js';
+import { getPool } from '../db/client.js';
 import { config } from '../config.js';
 
 export async function logTaskResult(taskType, model, success, tokens, duration) {
-  // Simple file-based tracking for the foundation, to be upgraded to DB in Stage 5
-  const logPath = 'db/performance.log';
-  const entry = JSON.stringify({ taskType, model, success, tokens, duration, timestamp: Date.now() });
-  await runTool('append_file', { path: logPath, content: entry + '\n' }, config.workspaceRoot);
+  await getPool().query(
+    `
+      INSERT INTO model_performance (model_name, task_type, success, tokens_used, duration_ms)
+      VALUES ($1, $2, $3, $4, $5)
+    `,
+    [model, taskType, success, tokens, duration]
+  );
 }
 
 export async function getBestModel(taskType) {

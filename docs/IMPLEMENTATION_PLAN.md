@@ -1,8 +1,8 @@
-# Arnold: Implementation Plan & Task List
+# surgical-orchestrator: Implementation Plan & Task List
 
 ## 1. Implementation Design: The Porting Strategy
 
-Arnold will be built in **Layered Incremental Stages**. Each module is not just copied; it is rewritten using **Clean Architecture** principles, with **exact-match unit tests** and **surgical file editing**.
+surgical-orchestrator will be built in **Layered Incremental Stages**. Each module is not just copied; it is rewritten using **Clean Architecture** principles, with **exact-match unit tests** and **surgical file editing**.
 
 ### Layered Rewrite Strategy
 - **Layer 0 (Foundation):** CLI Entry, Configuration, Tool Registry (Registry of `replace`, `write_file`).
@@ -37,5 +37,5 @@ Arnold will be built in **Layered Incremental Stages**. Each module is not just 
 1. **Audit:** Read original LocalClaw module source.
 2. **Design:** Map logic, dependencies, and state transitions.
 3. **Spec:** Create `docs/modules/<name>.md`.
-4. **Implement:** Write Arnold version (clean-room rewrite).
+4. **Implement:** Write surgical-orchestrator version (clean-room rewrite).
 5. **Verify:** Run integration tests within the target project directory.

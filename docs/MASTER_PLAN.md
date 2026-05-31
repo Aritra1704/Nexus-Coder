@@ -1,7 +1,7 @@
-# Arnold: Master Implementation Plan
+# surgical-orchestrator: Master Implementation Plan
 
 ## 1. Project Philosophy
-- **"Gemini thinks. Ollama types. Arnold ships."**
+- **"Gemini thinks. Ollama types. surgical-orchestrator ships."**
 - Autonomy through orchestration, not magic.
 - Humans collaborate; they do not approve every trivial file change.
 - Git is the absolute source of truth.

@@ -34,7 +34,7 @@ The Agentic Layer transforms Gemini's high-level tool calls into surgical, verif
   1. `git diff <path>` (verify change exists).
   2. Run `lint` / `syntax_check` for the language.
   3. Run related `unit_tests`.
-  4. If all pass: `git commit -m "feat(arnold): <task id> - <change summary>"`.
+  4. If all pass: `git commit -m "feat(surgical-orchestrator): <task id> - <change summary>"`.
   5. If fail: `git checkout <path>` (revert), return failure to GeminiDriver.
 - **Testing:** 
   - Test Git failure branch (revert triggered).

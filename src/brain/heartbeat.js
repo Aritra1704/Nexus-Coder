@@ -7,14 +7,14 @@ export class HeartbeatService {
   }
 
   start() {
-    console.log('Arnold Heartbeat started...');
+    console.log('surgical-orchestrator Heartbeat started...');
     this.timer = setInterval(async () => {
       await this.pulse();
     }, 3600000); // Hourly pulse
   }
 
   async pulse() {
-    console.log('Arnold Pulse: Scanning for tasks/maintenance...');
+    console.log('surgical-orchestrator Pulse: Scanning for tasks/maintenance...');
     // TODO: Implement scan logic for dependency drift, documentation rot, etc.
   }
 

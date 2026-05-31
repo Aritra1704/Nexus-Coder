@@ -15,7 +15,7 @@ export function getPool() {
       max: 10,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 10000,
-      application_name: 'arnold',
+      application_name: 'surgical-orchestrator',
       options: getSearchPathOptions(),
     });
   }

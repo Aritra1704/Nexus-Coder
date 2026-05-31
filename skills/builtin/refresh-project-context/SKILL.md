@@ -1,7 +1,7 @@
 # Skill: Refresh Project Context
 
 ## Purpose
-Synchronizes Arnold's internal knowledge graph and memory with the latest state of a project's filesystem, documentation, and git history.
+Synchronizes surgical-orchestrator's internal knowledge graph and memory with the latest state of a project's filesystem, documentation, and git history.
 
 ## Trigger Phrases
 - "refresh context"
@@ -16,4 +16,4 @@ Synchronizes Arnold's internal knowledge graph and memory with the latest state 
 
 ## Directives
 - Always run this skill before starting a large implementation task.
-- Update `docs/PORTING_STATUS.md` if the project is part of an Arnold migration.
+- Update `docs/PORTING_STATUS.md` if the project is part of an surgical-orchestrator migration.

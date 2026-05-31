@@ -1,7 +1,7 @@
 # Module Design: Intelligence Layer (`src/intelligence/`)
 
 ## 1. Purpose
-The Intelligence Layer provides the decision-making data for Arnold's orchestrator. It answers: 
+The Intelligence Layer provides the decision-making data for surgical-orchestrator's orchestrator. It answers: 
 1. Which model should I use for this task? (`ModelPerformanceTracker`)
 2. Am I running out of context? (`TokenBudget`)
 3. Can I automate this recurring pattern? (`SkillGenerator`)

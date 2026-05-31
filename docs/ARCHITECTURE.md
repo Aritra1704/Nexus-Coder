@@ -1,4 +1,4 @@
-# Arnold Architecture: The Autonomous Coding Agent
+# surgical-orchestrator Architecture: The Autonomous Coding Agent
 
 *Version 0.1 — Planning Document*
 *Date: May 27, 2026*
@@ -7,9 +7,9 @@
 
 ## Core Philosophy
 
-> "Gemini thinks. Ollama types. Arnold ships."
+> "Gemini thinks. Ollama types. surgical-orchestrator ships."
 
-Gemini is not just a model in Arnold — it IS the runtime. It drives every decision,
+Gemini is not just a model in surgical-orchestrator — it IS the runtime. It drives every decision,
 calls every tool, and never steps away from a task until it's done or has a clear reason
 to stop. Ollama models are disposable workers Gemini calls to generate specific code
 blocks. The human is an optional collaborator, not a required approver.
@@ -24,11 +24,11 @@ Task → Planner generates static JSON plan → Executor blindly runs steps in o
        (Gemini plans ONCE and steps away)
 ```
 
-**Arnold architecture:**
+**surgical-orchestrator architecture:**
 ```
 Task → Gemini enters a tool loop
-       Gemini decides next tool → Arnold executes → result returned to Gemini
-       Gemini decides next tool → Arnold executes → result returned to Gemini
+       Gemini decides next tool → surgical-orchestrator executes → result returned to Gemini
+       Gemini decides next tool → surgical-orchestrator executes → result returned to Gemini
        ... (continuous until done or blocked)
        Gemini never steps away
 ```
@@ -61,7 +61,7 @@ graph TD
 
 ### 1. Orchestration Layer (`src/brain/geminiDriver.js`)
 
-The heart of Arnold. Replaces the Orchestrator, Planner, and Executor from LocalClaw.
+The heart of surgical-orchestrator. Replaces the Orchestrator, Planner, and Executor from LocalClaw.
 
 **What it does:**
 - Opens a Gemini multi-turn session (function calling mode).
@@ -115,7 +115,7 @@ Internally this runs three sub-agents in sequence.
 ## Project Structure
 
 ```
-Arnold/
+surgical-orchestrator/
 ├── src/
 │   ├── brain/          # GeminiDriver (core loop)
 │   ├── agents/         # FileEditRouter, Writer, Patcher, GitGuardian
@@ -129,7 +129,7 @@ Arnold/
 │   └── builtin/        # 8 ported and improved skills
 ├── docs/
 │   ├── ARCHITECTURE.md     # Full technical specification
-│   └── TRANSITION_RATIONALE.md # Why Arnold replaced LocalClaw
+│   └── TRANSITION_RATIONALE.md # Why surgical-orchestrator replaced LocalClaw
 └── db/
     └── migrations/         # Migration scripts
 ```

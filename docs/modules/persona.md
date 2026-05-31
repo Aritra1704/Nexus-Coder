@@ -1,7 +1,7 @@
 # Module Design: Persona (`src/infrastructure/persona/`)
 
 ## 1. Purpose
-The `Persona` module defines Arnold's identity, communication style, and high-signal notification formatting. It ensures that Arnold remains a professional, precise, and non-chatty "Coding Architect."
+The `Persona` module defines surgical-orchestrator's identity, communication style, and high-signal notification formatting. It ensures that surgical-orchestrator remains a professional, precise, and non-chatty "Coding Architect."
 
 ## 2. Component Specifications
 - **Persona Settings (`settings.js`):** Defines verbosity levels and teaching depth for different channels (Telegram, UI, GitHub).

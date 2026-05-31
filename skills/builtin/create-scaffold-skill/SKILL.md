@@ -1,7 +1,7 @@
 # Skill: Create Scaffold Skill
 
 ## Purpose
-Enables Arnold to create new scaffolding skills for specific frameworks or languages by generating the necessary `SKILL.md` and associated templates.
+Enables surgical-orchestrator to create new scaffolding skills for specific frameworks or languages by generating the necessary `SKILL.md` and associated templates.
 
 ## Trigger Phrases
 - "create new scaffold skill"
@@ -15,5 +15,5 @@ Enables Arnold to create new scaffolding skills for specific frameworks or langu
 4. **Self-Register:** Register the new skill with the `SkillManager`.
 
 ## Directives
-- Ensure the new skill follows the Arnold `SKILL.md` standard.
+- Ensure the new skill follows the surgical-orchestrator `SKILL.md` standard.
 - Use `Ollama` to generate the initial boilerplate patterns.

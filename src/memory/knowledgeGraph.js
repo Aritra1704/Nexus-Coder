@@ -1,37 +1,39 @@
-import { runTool } from '../tools/registry.js';
-import { config } from '../config.js';
-import path from 'node:path';
-
-const GRAPH_PATH = path.join('memory', 'graph.json');
-
-let graph = { nodes: {}, edges: [] };
-
-async function loadGraph() {
-  try {
-    const result = await runTool('read_file', { path: GRAPH_PATH }, config.workspaceRoot);
-    graph = JSON.parse(result.content);
-  } catch {
-    graph = { nodes: {}, edges: [] };
-  }
-}
-
-async function saveGraph() {
-  await runTool('write_file', { path: GRAPH_PATH, content: JSON.stringify(graph, null, 2) }, config.workspaceRoot);
-}
+import { getPool } from '../db/client.js';
 
 export async function addNode(id, type, metadata = {}) {
-  await loadGraph();
-  graph.nodes[id] = { type, metadata };
-  await saveGraph();
+  await getPool().query(
+    `
+      INSERT INTO graph_nodes (id, type, metadata)
+      VALUES ($1, $2, $3::jsonb)
+      ON CONFLICT (id) DO UPDATE
+      SET type = EXCLUDED.type,
+          metadata = EXCLUDED.metadata
+    `,
+    [id, type, JSON.stringify(metadata)]
+  );
 }
 
 export async function addEdge(from, to, relation) {
-  await loadGraph();
-  graph.edges.push({ from, to, relation });
-  await saveGraph();
+  await getPool().query(
+    `
+      INSERT INTO graph_edges (from_node, to_node, relation)
+      VALUES ($1, $2, $3)
+      ON CONFLICT (from_node, to_node, relation) DO NOTHING
+    `,
+    [from, to, relation]
+  );
 }
 
 export async function getDependencies(nodeId) {
-  await loadGraph();
-  return graph.edges.filter(edge => edge.to === nodeId).map(edge => edge.from);
+  const result = await getPool().query(
+    `
+      SELECT from_node
+      FROM graph_edges
+      WHERE to_node = $1
+      ORDER BY id ASC
+    `,
+    [nodeId]
+  );
+
+  return result.rows.map((row) => row.from_node);
 }

@@ -17,8 +17,8 @@ const envSchema = z.object({
   // Model Configuration (Multi-model pipeline)
   GEMINI_API_KEY: z.string().optional(),
   OLLAMA_BASE_URL: z.string().url().default('http://127.0.0.1:11434'),
-  MODEL_PLANNER: z.string().default('gemini-2.5-pro'),
-  MODEL_CODER: z.string().default('qwen2.5-coder:7b'),
+  MODEL_PLANNER: z.string().default('gemini-3.1-pro'),
+  MODEL_CODER: z.string().default('qwen2.5-coder:14b'),
   MODEL_ROUTER: z.string().default('llama3.2:3b'),
   MODEL_VERIFIER: z.string().default('qwen2.5-coder:7b'),
 

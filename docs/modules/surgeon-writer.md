@@ -5,7 +5,7 @@
 - **FilePatcher (`filePatcher.js`):** Encapsulates the `replace` operation. Used for *surgical* updates to existing codebases.
 
 ## 2. Logic Mapping
-| Module | Original Method | Arnold Method | Dependencies |
+| Module | Original Method | surgical-orchestrator Method | Dependencies |
 | :--- | :--- | :--- | :--- |
 | `fileWriter` | `write_file` (tool) | `write(path, content)` | `registry.js` |
 | `filePatcher` | `replace` (tool) | `patch(path, old, new)` | `registry.js` |

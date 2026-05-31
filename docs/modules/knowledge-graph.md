@@ -1,7 +1,7 @@
 # Module Design: Knowledge Graph (`src/memory/knowledgeGraph.js`)
 
 ## 1. Purpose
-The `KnowledgeGraph` manages complex relationships between project entities: Tasks, Files, Learnings, and Artifacts. It enables Arnold to query dependencies (e.g., "Which tasks must complete before implementing Task X?").
+The `KnowledgeGraph` manages complex relationships between project entities: Tasks, Files, Learnings, and Artifacts. It enables surgical-orchestrator to query dependencies (e.g., "Which tasks must complete before implementing Task X?").
 
 ## 2. Component Specifications
 - **Nodes:** Unique entities (Task IDs, File paths, Learning IDs).

@@ -1,7 +1,7 @@
 # Module Design: RAG (`src/memory/rag/`)
 
 ## 1. Purpose
-The RAG (Retrieval-Augmented Generation) module provides semantic search over the project's documentation and Arnold's past experiences. It allows Gemini to find relevant context that is too large for the immediate context window.
+The RAG (Retrieval-Augmented Generation) module provides semantic search over the project's documentation and surgical-orchestrator's past experiences. It allows Gemini to find relevant context that is too large for the immediate context window.
 
 ## 2. Component Specifications
 - **Chunker (`chunker.js`):** Splits long documents into manageable, overlapping tokens.

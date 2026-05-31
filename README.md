@@ -1,14 +1,14 @@
-# Arnold: The Autonomous Coding Orchestrator
+# surgical-orchestrator: The Autonomous Coding Orchestrator
 
-Arnold is a persistent, agentic coding orchestrator built to be the "brain" of your development lifecycle. It takes a project from idea to working code — planning, architecting, writing, verifying, and committing — with a focus on surgical precision and cost optimization.
+surgical-orchestrator is a persistent, agentic coding orchestrator built to be the "brain" of your development lifecycle. It takes a project from idea to working code — planning, architecting, writing, verifying, and committing — with a focus on surgical precision and cost optimization.
 
-Born from the lessons of LocalClaw, Arnold solves the "sandbox trap" by working directly inside your real projects, editing files surgically to maintain context, and managing a multi-model intelligence pipeline to minimize API costs while maximizing reasoning quality.
+Born from the lessons of LocalClaw, surgical-orchestrator solves the "sandbox trap" by working directly inside your real projects, editing files surgically to maintain context, and managing a multi-model intelligence pipeline to minimize API costs while maximizing reasoning quality.
 
 ---
 
 ## How It Works
 
-Arnold does not generate a static plan and walk away. Gemini drives a **live tool loop** — deciding the next action, calling the right tool, reading the result, and deciding again — until the task is done.
+surgical-orchestrator does not generate a static plan and walk away. Gemini drives a **live tool loop** — deciding the next action, calling the right tool, reading the result, and deciding again — until the task is done.
 
 ```
 Task arrives
@@ -35,13 +35,13 @@ Task ships. Learning saved. Skill created if pattern repeats.
 
 3. **Surgical editing by default.** Every change to an existing file goes through a 3-agent pipeline: a router decides `write` vs `patch`, a writer or patcher generates the change, and a git-verification agent confirms syntax and logic before committing.
 
-4. **Works in your real projects.** No isolated workspace copies. Arnold operates directly inside your target project directory.
+4. **Works in your real projects.** No isolated workspace copies. surgical-orchestrator operates directly inside your target project directory.
 
 5. **Git is the source of truth.** Every verified step is committed immediately. The git log is the task execution log. Crashes resume from the last clean commit.
 
-6. **You are a collaborator, not an approver.** When you are online, Arnold delegates complex tasks to you, waits for your git push, then verifies and continues automatically.
+6. **You are a collaborator, not an approver.** When you are online, surgical-orchestrator delegates complex tasks to you, waits for your git push, then verifies and continues automatically.
 
-7. **Learns and evolves.** Every task outcome is recorded. Model performance is tracked per task type. When a pattern succeeds three times, Arnold auto-generates a skill so the next run is faster and cheaper.
+7. **Learns and evolves.** Every task outcome is recorded. Model performance is tracked per task type. When a pattern succeeds three times, surgical-orchestrator auto-generates a skill so the next run is faster and cheaper.
 
 ---
 
@@ -61,7 +61,7 @@ Gemini drives the strategy. Ollama handles the heavy lifting. You handle what ne
 ## Project Structure
 
 ```
-Arnold/
+surgical-orchestrator/
 ├── src/
 │   ├── brain/          # GeminiDriver (the core loop)
 │   ├── agents/         # FileEditRouter, Surgeon, GitGuardian
@@ -75,7 +75,7 @@ Arnold/
 │   └── builtin/        # Reusable workflow instructions
 ├── docs/
 │   ├── ARCHITECTURE.md     # Full technical specification
-│   └── TRANSITION_RATIONALE.md # Why Arnold replaced LocalClaw
+│   └── TRANSITION_RATIONALE.md # Why surgical-orchestrator replaced LocalClaw
 └── db/
     └── migrations/         # Persistence layer
 ```
@@ -84,7 +84,7 @@ Arnold/
 
 ## What Makes It Different from LocalClaw
 
-| LocalClaw | Arnold |
+| LocalClaw | surgical-orchestrator |
 |-----------|--------|
 | Static JSON plans | Live, continuous tool loop |
 | Ollama planned everything (high failure) | Gemini plans/reviews, Ollama executes |

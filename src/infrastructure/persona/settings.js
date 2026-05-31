@@ -1,5 +1,5 @@
 export const DEFAULT_SETTINGS = {
-  voice: 'arnold_orchestrator',
+  voice: 'surgical-orchestrator_orchestrator',
   verbosity: 'concise', // concise | detailed
   channels: {
     telegram: { enabled: true, verbosity: 'concise' },

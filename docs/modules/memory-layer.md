@@ -1,7 +1,7 @@
 # Module Design: Memory Layer (`src/memory/`)
 
 ## 1. Purpose
-The Memory Layer allows Arnold to persist its experiences beyond a single session. It manages:
+The Memory Layer allows surgical-orchestrator to persist its experiences beyond a single session. It manages:
 - **Exact Artifacts:** Verbatim storage of decisions/artifacts.
 - **Knowledge Graph:** Connections between concepts, tasks, and files.
 - **Retention/Pruning:** Auto-managing storage to ensure relevance.

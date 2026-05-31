@@ -1,8 +1,8 @@
 # Porting Status Dashboard
 
-This document tracks the migration of modules from LocalClaw to Arnold.
+This document tracks the migration of modules from LocalClaw to surgical-orchestrator.
 
-| Module Name | Original Path | Status | Arnold Path | Notes |
+| Module Name | Original Path | Status | surgical-orchestrator Path | Notes |
 | :--- | :--- | :--- | :--- | :--- |
 | `config` | `src/config.js` | Verified | `src/config.js` | |
 | `registry` | `src/tools/registry.js` | Verified | `src/tools/registry.js` | Added `replace` tool |

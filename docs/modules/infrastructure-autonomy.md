@@ -1,7 +1,7 @@
 # Module Design: Infrastructure & Autonomy (`src/infrastructure/`)
 
 ## 1. Purpose
-This layer enables Arnold to connect to external systems (DB, Telegram, API) and ensures Arnold remains active autonomously via the Heartbeat service.
+This layer enables surgical-orchestrator to connect to external systems (DB, Telegram, API) and ensures surgical-orchestrator remains active autonomously via the Heartbeat service.
 
 ## 2. Component Specifications
 
@@ -16,7 +16,7 @@ This layer enables Arnold to connect to external systems (DB, Telegram, API) and
 - **Testing:** Verify command reception and message sending.
 
 ### 2c. Control API (`src/control/api.js`)
-- **Responsibility:** Expose Arnold status and task control.
+- **Responsibility:** Expose surgical-orchestrator status and task control.
 - **Tool:** `express` or `fastify`.
 - **Testing:** Verify HTTP status endpoints and task spawning endpoints.
 

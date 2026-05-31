@@ -1,7 +1,7 @@
 # Skill: SelfTracker
 
 ## Purpose
-Enforces project tracking, task status updates, and state retention for the Arnold orchestrator.
+Enforces project tracking, task status updates, and state retention for the surgical-orchestrator orchestrator.
 
 ## Workflow
 1. **Initiation:** Every task starts by documenting its objective in the current state record.

@@ -5,7 +5,7 @@ The `dbClient` provides a centralized, pooled connection to the PostgreSQL datab
 
 ## 2. Logic Mapping
 - **Connection Pooling:** Uses `pg.Pool` for efficient connection management.
-- **Schema Management:** Automatically ensures the `arnold` schema exists.
+- **Schema Management:** Automatically ensures the `surgical-orchestrator` schema exists.
 - **Query Wrapper:** Provides a robust `query` method with error handling and logging.
 
 ## 3. Implementation Plan
