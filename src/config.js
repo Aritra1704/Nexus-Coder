@@ -30,6 +30,7 @@ const envSchema = z.object({
   CONTROL_API_TOKEN: z.string().optional(),
   CONTROL_API_PORT: z.coerce.number().int().positive().default(3000),
   CONTROL_API_HOST: z.string().default('127.0.0.1'),
+  GEMINI_TASK_TOKEN_BUDGET: z.coerce.number().int().positive().default(128000),
 
   // Agent Logic
   AUTO_RESUME_ENABLED: z.enum(['true', 'false']).default('true').transform((val) => val === 'true'),
@@ -66,6 +67,7 @@ export const config = {
   controlApiToken: env.CONTROL_API_TOKEN,
   controlApiPort: env.CONTROL_API_PORT,
   controlApiHost: env.CONTROL_API_HOST,
+  geminiTaskTokenBudget: env.GEMINI_TASK_TOKEN_BUDGET,
   
   workspaceRoot: defaultWorkspacePath,
   

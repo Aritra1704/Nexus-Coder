@@ -92,9 +92,90 @@ async function testRunLoopBroadcastsLifecycleUpdates() {
   console.log('GeminiDriver runLoop notification tests passed!');
 }
 
+async function testRunLoopCompactsContextWhenTokenBudgetIsExceeded() {
+  const toolCalls = [];
+  const savedStates = [];
+  const summaries = [];
+  const driver = new GeminiDriver(
+    {
+      async runTool(name, args) {
+        toolCalls.push({ name, args });
+        return { status: 'success' };
+      },
+    },
+    {
+      retriever: {
+        async retrieve() {
+          return [];
+        },
+      },
+      telegramBot: {
+        async broadcastTaskUpdate() {},
+      },
+      geminiTaskTokenBudget: 100,
+    }
+  );
+
+  let decideCount = 0;
+  driver.decide = async () => {
+    decideCount += 1;
+
+    if (decideCount === 1) {
+      return {
+        type: 'tool_call',
+        text: 'Inspect the target file before editing.',
+        toolCall: {
+          name: 'read_file',
+          args: { path: 'src/example.js' },
+        },
+        usage: { totalTokenCount: 80 },
+      };
+    }
+
+    return {
+      type: 'final',
+      summary: 'Compacted context and finished.',
+      usage: { totalTokenCount: 20 },
+    };
+  };
+  driver.summarizeProgress = async (state) => {
+    summaries.push(state.messages.map((message) => message.role));
+    return 'Architecture: preserve tool state. File state: src/example.js still pending.';
+  };
+  driver.persistReasoning = async () => {};
+  driver.persistToolResult = async () => {};
+  driver.persistContextSummary = async () => {};
+  driver.saveCheckpoint = async (state) => {
+    savedStates.push({
+      messageCount: state.messages.length,
+      contextCompactionCount: state.contextCompactionCount ?? 0,
+    });
+  };
+
+  const state = await driver.runLoop({
+    id: 'task-ctx-1',
+    objective: 'Keep working after context compaction',
+  });
+
+  assert.strictEqual(toolCalls.length, 0, 'The over-budget tool decision should be discarded before execution');
+  assert.strictEqual(summaries.length, 1, 'runLoop should summarize context once when the budget is exceeded');
+  assert.strictEqual(state.contextCompactionCount, 1, 'Context compaction count should increment');
+  assert.strictEqual(state.messages[0].role, 'system');
+  assert.strictEqual(state.messages[1].role, 'user');
+  assert.ok(state.messages[1].content.includes('Restart Context Summary:'), 'Compacted state should include the restart summary');
+  assert.ok(state.messages[1].content.includes('src/example.js still pending'), 'Compacted state should retain the summary content');
+  assert.deepStrictEqual(savedStates[0], {
+    messageCount: 2,
+    contextCompactionCount: 1,
+  });
+
+  console.log('GeminiDriver context compaction tests passed!');
+}
+
 async function run() {
   await testLoadStateIncludesRelevantContext();
   await testRunLoopBroadcastsLifecycleUpdates();
+  await testRunLoopCompactsContextWhenTokenBudgetIsExceeded();
 }
 
 run().catch((err) => {

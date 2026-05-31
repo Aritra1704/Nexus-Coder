@@ -23,6 +23,26 @@ function formatRelevantContext(matches) {
   ].join('\n\n');
 }
 
+function getResponseTokenCount(usage) {
+  if (!usage || typeof usage !== 'object') {
+    return null;
+  }
+
+  if (Number.isFinite(usage.totalTokenCount)) {
+    return usage.totalTokenCount;
+  }
+
+  if (Number.isFinite(usage.total_token_count)) {
+    return usage.total_token_count;
+  }
+
+  const promptTokens = Number.isFinite(usage.prompt_eval_count) ? usage.prompt_eval_count : 0;
+  const completionTokens = Number.isFinite(usage.eval_count) ? usage.eval_count : 0;
+  const total = promptTokens + completionTokens;
+
+  return total > 0 ? total : null;
+}
+
 export class GeminiDriver {
   constructor(registry, hooks = {}) {
     this.registry = registry;
@@ -32,6 +52,8 @@ export class GeminiDriver {
     this.retriever = hooks.retriever ?? new Retriever();
     this.telegramBot = hooks.telegramBot ?? { broadcastTaskUpdate };
     this.maxSteps = hooks.maxSteps ?? 25;
+    this.geminiTaskTokenBudget = hooks.geminiTaskTokenBudget ?? config.geminiTaskTokenBudget;
+    this.maxMessageCountBeforeCompaction = hooks.maxMessageCountBeforeCompaction ?? 24;
   }
 
   async runLoop(task) {
@@ -43,6 +65,17 @@ export class GeminiDriver {
       this.hooks.runtimeUpdate?.({ phase: 'analyzing', detail: 'Planning next step' });
 
       const decision = await this.decide(state);
+      state.lastUsage = decision.usage ?? null;
+
+      if (await this.shouldCompactContext(state, decision)) {
+        this.hooks.runtimeUpdate?.({
+          phase: 'compacting',
+          detail: 'Context window exceeded 70% of budget; summarizing progress',
+        });
+        await this.compactContext(state);
+        await this.saveCheckpoint(state);
+        continue;
+      }
 
       if (decision.type === 'final') {
         state.messages.push({
@@ -130,12 +163,14 @@ export class GeminiDriver {
         type: 'tool_call',
         text: response.text,
         toolCall: response.toolCalls[0],
+        usage: response.usage ?? null,
       };
     }
 
     return {
       type: 'final',
       summary: response.text,
+      usage: response.usage ?? null,
     };
   }
 
@@ -169,12 +204,7 @@ export class GeminiDriver {
   }
 
   async loadState(task) {
-    const systemPrompt = [
-      'You are a surgical coding orchestrator.',
-      'Use available tools when needed to inspect files, edit files, or run commands.',
-      'After each tool result, continue toward the objective.',
-      'When the task is complete, respond with a concise final summary and no tool calls.',
-    ].join(' ');
+    const systemPrompt = this.buildSystemPrompt();
     const taskObjective = task.objective ?? task.payload?.objective ?? 'Complete the assigned task.';
     const priorMessages = Array.isArray(task.messages) ? task.messages : [];
     let relevantContext = '';
@@ -199,8 +229,12 @@ export class GeminiDriver {
     return {
       isDone: false,
       task,
+      systemPrompt,
+      taskObjective,
       stepCount: 0,
       finalSummary: null,
+      contextCompactionCount: 0,
+      lastUsage: null,
       messages: [
         { role: 'system', content: systemPrompt },
         {
@@ -222,6 +256,8 @@ export class GeminiDriver {
       stepCount: state.stepCount,
       finalSummary: state.finalSummary,
       messageCount: state.messages.length,
+      contextCompactionCount: state.contextCompactionCount ?? 0,
+      lastUsage: state.lastUsage ?? null,
     });
   }
 
@@ -241,5 +277,72 @@ export class GeminiDriver {
       step: state.stepCount,
       ...toolResult,
     });
+  }
+
+  buildSystemPrompt() {
+    return [
+      'You are a surgical coding orchestrator.',
+      'Use available tools when needed to inspect files, edit files, or run commands.',
+      'After each tool result, continue toward the objective.',
+      'When the task is complete, respond with a concise final summary and no tool calls.',
+    ].join(' ');
+  }
+
+  async shouldCompactContext(state, decision) {
+    const tokenCount = getResponseTokenCount(decision?.usage);
+
+    if (Number.isFinite(tokenCount) && Number.isFinite(this.geminiTaskTokenBudget)) {
+      return tokenCount >= this.geminiTaskTokenBudget * 0.7;
+    }
+
+    return state.messages.length >= this.maxMessageCountBeforeCompaction;
+  }
+
+  async compactContext(state) {
+    const summary = await this.summarizeProgress(state);
+
+    state.messages = [
+      { role: 'system', content: state.systemPrompt ?? this.buildSystemPrompt() },
+      {
+        role: 'user',
+        content: [
+          `Task ID: ${state.task.id ?? 'unknown'}`,
+          `Objective: ${state.taskObjective}`,
+          'Restart Context Summary:',
+          summary,
+        ].join('\n\n'),
+      },
+    ];
+    state.contextCompactionCount = (state.contextCompactionCount ?? 0) + 1;
+
+    await this.persistContextSummary(state, summary);
+  }
+
+  async persistContextSummary(state, summary) {
+    await saveArtifact(state.task.id ?? null, `gemini_context_summary_${state.contextCompactionCount}`, {
+      summary,
+      stepCount: state.stepCount,
+      lastUsage: state.lastUsage ?? null,
+    });
+  }
+
+  async summarizeProgress(state) {
+    const response = await this.geminiClient.generateResponse({
+      messages: [
+        ...state.messages,
+        {
+          role: 'user',
+          content: 'Summarize our progress so far, keeping all critical architectural decisions and current file states. This summary will be used to restart our context.',
+        },
+      ],
+      tools: [],
+      model: config.modelPlanner,
+    });
+
+    if (response.type !== 'text' || !response.text) {
+      throw new Error('Gemini context summarization did not return a text summary');
+    }
+
+    return response.text;
   }
 }
