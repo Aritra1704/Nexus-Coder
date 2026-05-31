@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { z } from 'zod';
 
-// Tool definitions for Arnold
+// Tool definitions for surgical-orchestrator
 export const TOOL_DEFINITIONS = [
   {
     name: 'make_dir',
@@ -33,6 +33,14 @@ export const TOOL_DEFINITIONS = [
       path: z.string().min(1),
       oldContent: z.string().min(1),
       newContent: z.string(),
+    }),
+  },
+  {
+    name: 'surgical_file_edit',
+    description: 'Use Ollama to identify an exact code block replacement for a file objective, then apply it with the replace tool.',
+    argsSchema: z.object({
+      path: z.string().min(1),
+      objective: z.string().min(1),
     }),
   },
   {
@@ -82,6 +90,11 @@ export async function runTool(name, args, workspaceRoot) {
       const patched = original.replace(args.oldContent, args.newContent);
       await fs.writeFile(absPath(args.path), patched, 'utf8');
       return { status: 'success', path: args.path };
+
+    case 'surgical_file_edit': {
+      const { patch } = await import('../agents/filePatcher.js');
+      return await patch(args.path, args.objective, workspaceRoot);
+    }
 
     case 'run_terminal_command':
       const { exec } = await import('node:child_process');
